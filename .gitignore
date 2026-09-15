@@ -1,0 +1,15 @@
+# Data (real datasets shouldn't go in git — Kaggle terms + repo size)
+data/loan_data.csv
+
+# Generated outputs (large/binary — regenerate by running the pipeline)
+outputs/*.pkl
+outputs/*.csv
+outputs/*.png
+
+# Python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
