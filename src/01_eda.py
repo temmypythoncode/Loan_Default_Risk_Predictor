@@ -11,9 +11,10 @@ import seaborn as sns
 import os
 
 # --- Config ---------------------------------------------------------------
-DATA_PATH = "data/loan_data.csv"          # swap to your real Kaggle file
+DATA_PATH = "data/loan_data.csv"          # Kaggle: nikhil1e9/loan-default
 FALLBACK_PATH = "data/sample_data.csv"    # used automatically if the above is missing
 TARGET_COLUMN = "Default"
+ID_COLUMNS = ["LoanID"]                   # identifier columns — drop before analysis
 OUTPUT_DIR = "outputs"
 
 os.makedirs(OUTPUT_DIR, exist_ok=True)
@@ -22,6 +23,7 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 path = DATA_PATH if os.path.exists(DATA_PATH) else FALLBACK_PATH
 print(f"Loading data from: {path}")
 df = pd.read_csv(path)
+df = df.drop(columns=[c for c in ID_COLUMNS if c in df.columns])
 
 # --- Basic shape --------------------------------------------------------
 print("\n=== Shape ===")

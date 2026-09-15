@@ -27,15 +27,22 @@ training_columns = pd.read_csv(f"{OUTPUT_DIR}/processed_data.csv").drop(columns=
 # EDIT THIS: enter the new applicant's details here
 # ============================================================
 new_applicant = {
-    "age": 34,
-    "income": 48000,
-    "employment_years": 3.5,
-    "credit_score": 610,
-    "loan_amount": 18000,
-    "debt_to_income": 0.375,
-    "existing_loans": 2,
-    "home_ownership": "RENT",
-    "loan_purpose": "debt_consolidation",
+    "Age": 34,
+    "Income": 48000,
+    "LoanAmount": 18000,
+    "CreditScore": 610,
+    "MonthsEmployed": 42,
+    "NumCreditLines": 3,
+    "InterestRate": 14.5,
+    "LoanTerm": 36,
+    "DTIRatio": 0.40,
+    "Education": "Bachelor's",
+    "EmploymentType": "Full-time",
+    "MaritalStatus": "Single",
+    "HasMortgage": "No",
+    "HasDependents": "No",
+    "LoanPurpose": "Debt Consolidation",
+    "HasCoSigner": "No",
 }
 # ============================================================
 
@@ -45,11 +52,11 @@ def prepare_applicant(applicant_dict, training_columns):
     then align columns so the row matches what the model expects."""
     df = pd.DataFrame([applicant_dict])
 
-    # Same engineered features as 02_preprocessing.py
-    if "loan_amount" in df.columns and "income" in df.columns:
-        df["loan_to_income_ratio"] = df["loan_amount"] / df["income"].replace(0, 1)
-    if "debt_to_income" not in df.columns and "loan_amount" in df.columns and "income" in df.columns:
-        df["debt_to_income"] = df["loan_amount"] / df["income"].replace(0, 1)
+    # Same engineered feature as 02_preprocessing.py
+    income_col = "Income" if "Income" in df.columns else "income" if "income" in df.columns else None
+    loan_col = "LoanAmount" if "LoanAmount" in df.columns else "loan_amount" if "loan_amount" in df.columns else None
+    if income_col and loan_col:
+        df["loan_to_income_ratio"] = df[loan_col] / df[income_col].replace(0, 1)
 
     # One-hot encode the same way (drop_first=True, matching training)
     categorical_cols = df.select_dtypes(include="object").columns.tolist()

@@ -22,21 +22,18 @@ loan_default_predictor/
 └── README.md
 ```
 
-## Step 1 — Get the dataset
-Download one of these from Kaggle and save it as `data/loan_data.csv`:
+## Step 1 — Dataset
+The real dataset is already in place at `data/loan_data.csv` (from
+https://www.kaggle.com/datasets/nikhil1e9/loan-default — 255,347 rows,
+no missing values, ~11.6% default rate). The pipeline and notebook have
+both been run on it already; see Results below.
 
-- https://www.kaggle.com/datasets/nikhil1e9/loan-default (recommended — clean, beginner-friendly)
-- https://www.kaggle.com/datasets/yasserh/loan-default-dataset
-- https://www.kaggle.com/datasets/himelsarder/loan-default-risk-prediction-dataset
+If you want to try a different dataset later, drop it in as
+`data/loan_data.csv` and check the column names against `TARGET_COLUMN`
+and `ID_COLUMNS` at the top of each script in `src/`.
 
-The scripts expect a CSV with a binary target column indicating default
-(commonly named `Default`, `default`, or `loan_status`). Open the file
-once you download it and check the column name — you may need to update
-`TARGET_COLUMN` at the top of `02_preprocessing.py`.
-
-**Note:** a small synthetic sample (`data/sample_data.csv`) is included so
-you can run the whole pipeline right now and confirm everything works,
-before swapping in the real Kaggle data.
+A small synthetic sample (`data/sample_data.csv`) is also included for
+quick pipeline testing.
 
 ## Step 2 — Install dependencies
 ```bash
@@ -71,6 +68,24 @@ with `jupyter notebook` or `jupyter lab`, or use it directly for your
 capstone presentation/demo. It currently runs on the synthetic
 `sample_data.csv`; swap the data-loading cell to your real Kaggle file and
 re-run all cells once you have it.
+
+## Results (on the real dataset)
+255,347 applicants, 11.6% default rate.
+
+| Model | ROC-AUC | Recall (Default) | Precision (Default) |
+|---|---|---|---|
+| Logistic Regression | 0.762 | 0.70 | 0.23 |
+| Random Forest | 0.755 | 0.63 | 0.25 |
+
+Logistic Regression catches more actual defaulters (higher recall) at
+the cost of more false alarms; Random Forest is slightly more precise
+but misses more real defaulters. Which trade-off is "better" depends on
+what a missed default costs a lender versus a false alarm — worth
+discussing in your writeup.
+
+Top predictors of default (Random Forest feature importance): **Age**,
+**InterestRate**, **loan_to_income_ratio**, **MonthsEmployed**, and
+**Income**.
 
 ## Why each step matters (for your writeup)
 - **EDA**: understand class imbalance and spot data quality issues before

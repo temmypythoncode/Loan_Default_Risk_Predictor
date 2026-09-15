@@ -1,10 +1,10 @@
 # Data (real datasets shouldn't go in git — Kaggle terms + repo size)
 data/loan_data.csv
 
-# Generated outputs (large/binary — regenerate by running the pipeline)
+# Generated outputs — models and intermediate data are large/regenerable,
+# but keep the evaluation plots as evidence of results
 outputs/*.pkl
 outputs/*.csv
-outputs/*.png
 
 # Python
 __pycache__/

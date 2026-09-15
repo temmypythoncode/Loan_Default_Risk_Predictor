@@ -10,6 +10,7 @@ import os
 DATA_PATH = "data/loan_data.csv"
 FALLBACK_PATH = "data/sample_data.csv"
 TARGET_COLUMN = "Default"
+ID_COLUMNS = ["LoanID"]
 OUTPUT_DIR = "outputs"
 OUTPUT_PATH = f"{OUTPUT_DIR}/processed_data.csv"
 
@@ -19,6 +20,7 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 path = DATA_PATH if os.path.exists(DATA_PATH) else FALLBACK_PATH
 print(f"Loading data from: {path}")
 df = pd.read_csv(path)
+df = df.drop(columns=[c for c in ID_COLUMNS if c in df.columns])
 
 if TARGET_COLUMN not in df.columns:
     raise ValueError(
@@ -52,14 +54,18 @@ for col in categorical_cols:
 
 # --- Feature engineering -------------------------------------------------------
 # These ratios often carry more predictive signal than raw values alone.
-# Adjust/remove based on which columns your real dataset actually has.
-if "loan_amount" in df.columns and "income" in df.columns:
-    df["loan_to_income_ratio"] = df["loan_amount"] / df["income"].replace(0, np.nan)
+# Works with either the real Kaggle columns (Income, LoanAmount) or the
+# synthetic sample's lowercase columns (income, loan_amount).
+income_col = "Income" if "Income" in df.columns else "income" if "income" in df.columns else None
+loan_col = "LoanAmount" if "LoanAmount" in df.columns else "loan_amount" if "loan_amount" in df.columns else None
+
+if income_col and loan_col:
+    df["loan_to_income_ratio"] = df[loan_col] / df[income_col].replace(0, np.nan)
     df["loan_to_income_ratio"] = df["loan_to_income_ratio"].fillna(0)
     print("Engineered: loan_to_income_ratio")
 
-if "debt_to_income" not in df.columns and "loan_amount" in df.columns and "income" in df.columns:
-    df["debt_to_income"] = df["loan_amount"] / df["income"].replace(0, np.nan)
+if "debt_to_income" not in df.columns and "DTIRatio" not in df.columns and income_col and loan_col:
+    df["debt_to_income"] = df[loan_col] / df[income_col].replace(0, np.nan)
     df["debt_to_income"] = df["debt_to_income"].fillna(0)
     print("Engineered: debt_to_income")
 
