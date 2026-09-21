@@ -1,6 +1,9 @@
 # Loan Default Risk Predictor
 3MTT Capstone Project
 
+## Who this is for
+Micro-lenders and POS agents who are a major channel in Nigeria's agent banking and fintech ecosystem who need a fast, reliable way to check a borrower's repayment risk before approving a loan, often on the spot and with limited information. This tool takes an applicant's details (via CSV or manual entry) and returns a risk score, the key factors behind it, and a recommendation, so a micro-lender or POS agent can make a quick, informed decision instead of guessing.
+
 ## What this project does
 Predicts whether a loan applicant is likely to default, using a machine
 learning classification pipeline built in Python.
